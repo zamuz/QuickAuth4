@@ -9,6 +9,4 @@ The app can store up to 16 keys.  You must use 20 or less characters for the lab
 
 The authentication codes are based on time and timezones are also automatically handled.  (In case of time zone errors, just reboot your phone and watch.)
 
-There's a [great guide by Adam Zeis](http://www.connectedly.com/how-get-your-two-step-verification-codes-your-pebble) that explains how to setup the app to work with your Google account.
-
 Happy two-factoring!

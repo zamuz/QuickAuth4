@@ -42,7 +42,7 @@ static void multi_code_menu_draw_row_callback(GContext *ctx, Layer *cell_layer, 
 	}
 
 	if (watch_otp_count >= 1) {
-		graphics_draw_text(ctx, generateCode(otp_keys[cell_index->row], timezone_offset), font_pin.font, GRect(0, pin_origin_y, bounds.size.w, 30), GTextOverflowModeTrailingEllipsis, GTextAlignmentCenter, NULL);
+		graphics_draw_text(ctx, generateCode(otp_keys[cell_index->row], otp_hashes[cell_index->row], timezone_offset), font_pin.font, GRect(0, pin_origin_y, bounds.size.w, 30), GTextOverflowModeTrailingEllipsis, GTextAlignmentCenter, NULL);
 		graphics_draw_text(ctx, otp_labels[cell_index->row], fonts_get_system_font(FONT_KEY_GOTHIC_18), GRect(0, 30, bounds.size.w, 25), GTextOverflowModeTrailingEllipsis, GTextAlignmentCenter, NULL);
 	} else {
 		graphics_draw_text(ctx, "123456", font_pin.font, GRect(0, pin_origin_y, bounds.size.w, 30), GTextOverflowModeTrailingEllipsis, GTextAlignmentCenter, NULL);

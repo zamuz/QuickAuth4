@@ -36,6 +36,22 @@ module.exports =
 					"limit": 128
 				}
 			},
+			{
+				"type": "radiogroup",
+				"messageKey": "auth_hash",
+				"label": "Hash algorithm",
+				"options": [
+					{
+						"label": "SHA1",
+						"value": "SHA1"
+					},
+					{
+						"label": "SHA256",
+						"value": "SHA256"
+					}
+
+				]
+			},
 			{ 
 				"type": "text", 
 				"messageKey": "slots_remaining"

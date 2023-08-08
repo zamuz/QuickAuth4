@@ -1,15 +1,17 @@
 {
     "author": "Kevin Cooper",
     "dependencies": {
-        "pebble-clay": "^1.0.0"
+        "pebble-clay": "^1.0.4"
     },
-    "keywords": [],
-    "name": "quickauth",
+    "keywords": [
+	    "pebble-app"
+    ],
+    "name": "quickauth4",
     "pebble": {
         "capabilities": [
             "configurable"
         ],
-        "displayName": "QuickAuth",
+        "displayName": "QuickAuth 4",
         "enableMultiJS": true,
         "messageKeys": [
             "key_count",
@@ -26,7 +28,8 @@
             "background_color",
             "foreground_color",
             "auth_name",
-            "auth_key"
+            "auth_key",
+	    "auth_hash"
         ],
         "projectType": "native",
         "resources": {
@@ -40,13 +43,11 @@
                 {
                     "file": "images/SimpleFadeTop.png",
                     "name": "IMAGE_SIMPLE_FADE_TOP",
-                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
                     "file": "images/SimpleFadeBottom.png",
                     "name": "IMAGE_SIMPLE_FADE_BOTTOM",
-                    "targetPlatforms": null,
                     "type": "bitmap"
                 },
                 {
@@ -110,10 +111,10 @@
             "chalk",
             "diorite"
         ],
-        "uuid": "1f4d9835-3b9a-4ddd-907e-41a25d06f19c",
+        "uuid": "85bf7c30-6d6b-451a-87d4-614d1a4dc088",
         "watchapp": {
             "watchface": false
         }
     },
-    "version": "3.3.0"
+    "version": "4.0.0"
 }

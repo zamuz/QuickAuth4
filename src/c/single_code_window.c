@@ -109,7 +109,7 @@ void animate_label_off() {
 
 void animate_code_on() {
 	if (watch_otp_count)
-		strcpy(pin_text, generateCode(otp_keys[otp_selected], timezone_offset));
+		strcpy(pin_text, generateCode(otp_keys[otp_selected], otp_hashes[otp_selected], timezone_offset));
 	else
 		strcpy(pin_text, "123456");
 

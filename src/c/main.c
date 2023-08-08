@@ -45,6 +45,7 @@ unsigned int window_layout = 0;
 
 char otp_labels[MAX_OTP][MAX_LABEL_LENGTH];
 char otp_keys[MAX_OTP][MAX_KEY_LENGTH];
+char otp_hashes[MAX_OTP][MAX_KEY_LENGTH];
 
 // Functions requiring early declaration
 void request_key(int code_id);
@@ -86,36 +87,42 @@ void switch_window_layout(void) {
   update_window_layout();
 }
 
-void write_key(char label[MAX_LABEL_LENGTH], char key[MAX_KEY_LENGTH], unsigned int location) {
+void write_key(char label[MAX_LABEL_LENGTH], char key[MAX_KEY_LENGTH],
+	       char hash[MAX_HASH_LENGTH], unsigned int location) {
   char combined_key[MAX_COMBINED_LENGTH];
-  snprintf(combined_key, sizeof(combined_key), "%s:%s",label,key);
+  snprintf(combined_key, sizeof(combined_key), "%s:%s@%s",label,key,hash);
   persist_write_string(PS_SECRET+location, combined_key);
 }
 
 void move_key_position(unsigned int key_position, unsigned int new_position) {
   char label_buffer[MAX_LABEL_LENGTH];
   char key_buffer[MAX_KEY_LENGTH];
+  char hash_buffer[MAX_HASH_LENGTH];
 
   strcpy(label_buffer, otp_labels[key_position]);
   strcpy(key_buffer, otp_keys[key_position]);
+  strcpy(hash_buffer, otp_hashes[key_position]);
 
   if (key_position > new_position) {	
     for (unsigned int i = key_position; i > new_position; i--) {
       strcpy(otp_labels[i], otp_labels[i-1]);
       strcpy(otp_keys[i], otp_keys[i-1]);
-      write_key(otp_labels[i], otp_keys[i], i);
+      strcpy(otp_hashes[i], otp_hashes[i-1]);
+      write_key(otp_labels[i], otp_keys[i], otp_hashes[i], i);
     }
   } else if (new_position > key_position) {
     for (unsigned int i = key_position; i < new_position; i++) {
       strcpy(otp_labels[i], otp_labels[i+1]);
       strcpy(otp_keys[i], otp_keys[i+1]);
-      write_key(otp_labels[i], otp_keys[i], i);
+      strcpy(otp_hashes[i], otp_hashes[i+1]);
+      write_key(otp_labels[i], otp_keys[i], otp_hashes[i], i);
     }
   }
 
   strcpy(otp_labels[new_position], label_buffer);
   strcpy(otp_keys[new_position], key_buffer);
-  write_key(otp_labels[new_position], otp_keys[new_position], new_position);
+  strcpy(otp_hashes[new_position], hash_buffer);
+  write_key(otp_labels[new_position], otp_keys[new_position], otp_hashes[new_position], new_position);
 
   if (otp_default == key_position)
     set_default_key(new_position, false);
@@ -183,26 +190,39 @@ void expand_key(char *inputString, bool new_code) {
   }
 
   bool colonFound = false;
+  bool atFound = false;
   int outputChar = 0;
 
   char otp_key[MAX_KEY_LENGTH];
   char otp_label[MAX_LABEL_LENGTH];
+  char otp_hash[MAX_HASH_LENGTH];
 
   for(unsigned int i = 0; i < strlen(inputString); i++) {
-    if (inputString[i] == ':') {
-      otp_label[outputChar] = '\0';
-      colonFound = true;
-      outputChar = 0;
-    } else {
-      if (colonFound) 
-        otp_key[outputChar] = inputString[i]; 
-      else
-        otp_label[outputChar] = inputString[i];
-
-      outputChar++;
-    }
+      if (inputString[i] == '@') {
+          otp_key[outputChar] = '\0';
+          atFound = true;
+          outputChar = 0;
+      }
+      else {
+          if (inputString[i] == ':') {
+              otp_label[outputChar] = '\0';
+              colonFound = true;
+              outputChar = 0;
+          }
+	  else {
+	      if (atFound)
+		  otp_hash[outputChar] = inputString[i];
+	      else {
+                  if (colonFound) 
+                      otp_key[outputChar] = inputString[i]; 
+                  else
+                      otp_label[outputChar] = inputString[i];
+	      }
+              outputChar++;
+          }
+      }
   }
-  otp_key[outputChar] = '\0';
+  otp_hash[outputChar] = '\0';
 
   // If the label or key are null ignore them
   if (strlen(otp_label) <= 0 || strlen(otp_key) <= 2) {
@@ -235,6 +255,7 @@ void expand_key(char *inputString, bool new_code) {
       APP_LOG(APP_LOG_LEVEL_DEBUG, "INFO: Adding Code");
     strcpy(otp_keys[watch_otp_count], otp_key);
     strcpy(otp_labels[watch_otp_count], otp_label);
+    strcpy(otp_hashes[watch_otp_count], otp_hash);
     if (new_code) {
       if (DEBUG)
         APP_LOG(APP_LOG_LEVEL_DEBUG, "INFO: Saving to location: %d", PS_SECRET+watch_otp_count);
@@ -368,7 +389,8 @@ static void in_received_handler(DictionaryIterator *iter, void *context) {
       for (unsigned int i = key_found; i < watch_otp_count; i++) {
         strcpy(otp_keys[i], otp_keys[i+1]);
         strcpy(otp_labels[i], otp_labels[i+1]);
-        write_key(otp_labels[i], otp_keys[i], i);
+        strcpy(otp_hashes[i], otp_hashes[i+1]);
+        write_key(otp_labels[i], otp_keys[i], otp_hashes[i], i);
       }
       watch_otp_count--;
       persist_delete(PS_SECRET+watch_otp_count);

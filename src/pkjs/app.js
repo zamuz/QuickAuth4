@@ -318,7 +318,7 @@ Pebble.addEventListener('webviewclosed', function(e) {
 	// it was disabled while configuring
 	config[keys.idle_timeout] = idle_timeout;
 
-	if(configuration[keys.auth_name] && configuration[keys.auth_key]) {
+	if(configuration[keys.auth_name] && configuration[keys.auth_key] && configuration[keys.auth_hash]) {
 
 		var secret = configuration[keys.auth_key]
 		.replace(/0/g,"O")	// replace 0 with O
@@ -330,7 +330,8 @@ Pebble.addEventListener('webviewclosed', function(e) {
 		var label = configuration[keys.auth_name]
 		.replace(/:/g, '')
 		.substring(0, MAX_LABEL_LENGTH);
-		var secretPair = label + ":" + secret;
+		var hash = configuration[keys.auth_hash];
+		var secretPair = label + ":" + secret + "@" + hash;
 
 		var valid_key = checkKeyStringIsValid(secretPair);
 
@@ -367,5 +368,4 @@ Pebble.addEventListener('webviewclosed', function(e) {
 		console.log("INFO: Uploading config");
 	UpdateClayData();
 	sendAppMessage(config);
-}
-					   );
+});

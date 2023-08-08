@@ -13,10 +13,11 @@ typedef struct {
 	bool isCustom;
 } AppFont;
 
-#define MAX_OTP 30
+#define MAX_OTP 34
 #define MAX_LABEL_LENGTH 21 // 20 + termination
 #define MAX_KEY_LENGTH 129 // 128 + termination
-#define MAX_COMBINED_LENGTH MAX_LABEL_LENGTH+MAX_KEY_LENGTH
+#define MAX_HASH_LENGTH 7 // 6 + termination
+#define MAX_COMBINED_LENGTH MAX_LABEL_LENGTH+MAX_KEY_LENGTH+MAX_HASH_LENGTH
 #define APP_VERSION 33
 #define DEBUG false
 
@@ -51,6 +52,7 @@ extern AppFont font_label;
 
 extern char otp_labels[MAX_OTP][MAX_LABEL_LENGTH];
 extern char otp_keys[MAX_OTP][MAX_KEY_LENGTH];
+extern char otp_hashes[MAX_OTP][MAX_KEY_LENGTH];
 
 extern unsigned int font;
 extern unsigned int watch_otp_count;

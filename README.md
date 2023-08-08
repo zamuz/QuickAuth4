@@ -1,7 +1,7 @@
-QuickAuth
-==========
+QuickAuth 4
+===========
 
-Google Authenticator for the Pebble smart watch!
+Authenticator for the Pebble smart watch!
 
 ![](doc/pebbleauth_watch1_50.png) ![](doc/pebbleauth_watch2_50.png) ![](doc/pebbleauth_watch3_50.png) ![](doc/pebbleauth_watch4_50.png)
 
@@ -12,10 +12,3 @@ The authentication codes are based on time and timezones are also automatically 
 There's a [great guide by Adam Zeis](http://www.connectedly.com/how-get-your-two-step-verification-codes-your-pebble) that explains how to setup the app to work with your Google account.
 
 Happy two-factoring!
-
-
-### GET IT HERE
-
-![](doc/pebbleauth_qr.png)
-
-[![](http://pblweb.com/badge/53131df8bb31cf87cd00019a/white/medium/)](http://pblweb.com/appstore/53131df8bb31cf87cd00019a)
